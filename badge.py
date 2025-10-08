@@ -16,21 +16,8 @@ default_right_color="grey"
 default_logo="https://cdn.simpleicons.org/bilibili"
 common_whole_link="https://space.bilibili.com/"
 
-
 def getneededinfo(info: str,need: str):
     return info[need]
-
-def getvideoinfo(num: int,need: str):
-    return vist["list"]["vlist"][num][need]
-
-def getvideodate(num: int):
-    import datetime
-    from pytz import timezone
-    tzc = timezone('Asia/Shanghai')
-    date= getvideoinfo(num,"created")
-    date_time = datetime.datetime.fromtimestamp(date,tz=tzc)
-    formated_date = date_time.strftime("%Y年%m月%d日 %H:%M:%S")
-    return formated_date
 
 def write_file(filename:str,data:str):
     with open(filename,"wb") as file:
@@ -70,7 +57,6 @@ def make_view_badge():
 
 @logger.catch
 def main():
-    global vist
     uid = os.environ[ENV_VAR_BILI_UID]
     sessdata= os.environ[ENV_VAR_BILI_SESSDATA]
     logger.info("Trying to get some info...")
