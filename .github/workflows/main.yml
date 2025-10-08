@@ -1,0 +1,33 @@
+name: Update gist
+on:
+  workflow_dispatch:
+  push:
+    branches: master
+  schedule:
+    - cron: "0 */24 * * *"
+jobs:
+  update-gist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.9
+          cache: 'pip'
+          cache-dependency-path: '**/requirements.txt'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Update badge
+        run: python badge.py
+        env:
+          BILI_SESSDATA: ${{ secrets.BILI_SESSDATA }}
+          BILI_UID: '282873551'
+      - name: Output logs
+        run: cat log.log >>$GITHUB_STEP_SUMMARY
+      - name: Push commit to repo
+        run: |
+          git config --global user.name github-actions[bot]
+          git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -a -m "Update badge"
+          git push
