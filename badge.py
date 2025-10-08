@@ -6,8 +6,10 @@ from pybadges import badge
 
 ENV_VAR_BILI_SESSDATA = "BILI_SESSDATA"
 ENV_VAR_BILI_UID = "BILI_UID"
+ENV_VAR_BILI_JCT = "BILI_JCT"
 REQUIRED_ENVS = [
     ENV_VAR_BILI_SESSDATA,
+    ENV_VAR_BILI_JCT,
     ENV_VAR_BILI_UID
 ]
 
@@ -59,8 +61,9 @@ def make_view_badge():
 def main():
     uid = os.environ[ENV_VAR_BILI_UID]
     sessdata= os.environ[ENV_VAR_BILI_SESSDATA]
+    jct= os.environ[ENV_VAR_BILI_JCT]
     logger.info("Trying to get some info...")
-    cedential = Credential(sessdata=sessdata)
+    cedential = Credential(sessdata=sessdata,bili_jct=jct)
     u= user.User(uid,credential=cedential)
     i = sync(u.get_user_info())
     follows = sync(u.get_relation_info())
