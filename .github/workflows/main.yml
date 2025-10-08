@@ -1,8 +1,8 @@
-name: Update gist
+name: Update badge
 on:
   workflow_dispatch:
   push:
-    branches: master
+    branches: main
   schedule:
     - cron: "0 */24 * * *"
 jobs:
@@ -22,6 +22,7 @@ jobs:
         run: python badge.py
         env:
           BILI_SESSDATA: ${{ secrets.BILI_SESSDATA }}
+          BILI_JCT: ${{ secrets.BILI_JCT }}
           BILI_UID: '282873551'
       - name: Output logs
         run: cat log.log >>$GITHUB_STEP_SUMMARY
