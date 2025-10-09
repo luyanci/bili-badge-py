@@ -22,4 +22,4 @@ pip install -r requirements.txt
 
 - [lonelyion/bilibili-stats-badges](https://github.com/lonelyion/bilibili-stats-badges) 灵感及参考项目
 - [bilibili-api](https://github.com/Nemo2011/bilibili-api) 提供了方便的B站api调用
-- [google/badges](https://github.com/google/badges) 提供生成badge的方法
+- [google/pybadges](https://github.com/google/pybadges) 提供生成badge的方法
