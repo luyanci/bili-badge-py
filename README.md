@@ -32,4 +32,4 @@ pip install -r requirements.txt
 
 ## 相关项目
 
-- [bili-gist-py](https://github.com/luyanci/bili-gist-py) Pinned Gist信息卡
+- [bilibili-gist-py](https://github.com/luyanci/bilibili-gist-py) Pinned Gist信息卡
