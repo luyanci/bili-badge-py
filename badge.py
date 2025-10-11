@@ -2,7 +2,7 @@ import os
 from loguru import logger
 from dotenv import load_dotenv
 from bilibili_api import Credential,user,sync
-from pybadges import badge
+from pybadges import badge,_NAME_TO_COLOR
 
 ENV_VAR_BILI_SESSDATA = "BILI_SESSDATA"
 ENV_VAR_BILI_UID = "BILI_UID"
@@ -13,10 +13,10 @@ REQUIRED_ENVS = [
     ENV_VAR_BILI_UID
 ]
 
-if os.environ.get("BILI_VIEW_TYPE") is None:
-    view_type="video"
-else:
-    view_type=os.environ.get("BILI_VIEW_TYPE")
+# add some extra colors
+_NAME_TO_COLOR["lightgreen"] = "#90ee90"
+_NAME_TO_COLOR["lightblue"] = "#add8e6"
+_NAME_TO_COLOR["lightorange"] = "#ffcc99"
 
 default_left_color="blue"
 default_right_color="grey"
@@ -24,6 +24,17 @@ common_whole_link="https://space.bilibili.com/"
 
 # Base64 SVG logo for Bilibili (from simpleicons.org)
 default_logo = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAtMSAyMCAyOCI+CiAgICA8cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTcuODEzIDQuNjUzaC44NTRjMS41MS4wNTQgMi43NjkuNTc4IDMuNzczIDEuNTc0IDEuMDA0Ljk5NSAxLjUyNCAyLjI0OSAxLjU2IDMuNzZ2Ny4zNmMtLjAzNiAxLjUxLS41NTYgMi43NjktMS41NiAzLjc3M3MtMi4yNjIgMS41MjQtMy43NzMgMS41Nkg1LjMzM2MtMS41MS0uMDM2LTIuNzY5LS41NTYtMy43NzMtMS41NlMuMDM2IDE4Ljg1OCAwIDE3LjM0N3YtNy4zNmMuMDM2LTEuNTExLjU1Ni0yLjc2NSAxLjU2LTMuNzYgMS4wMDQtLjk5NiAyLjI2Mi0xLjUyIDMuNzczLTEuNTc0aC43NzRsLTEuMTc0LTEuMTJhMS4yMzQgMS4yMzQgMCAwIDEtLjM3My0uOTA2YzAtLjM1Ni4xMjQtLjY1OC4zNzMtLjkwN2wuMDI3LS4wMjdjLjI2Ny0uMjQ5LjU3My0uMzczLjkyLS4zNzMuMzQ3IDAgLjY1My4xMjQuOTIuMzczTDkuNjUzIDQuNDRjLjA3MS4wNzEuMTM0LjE0Mi4xODcuMjEzaDQuMjY3YS44MzYuODM2IDAgMCAxIC4xNi0uMjEzbDIuODUzLTIuNzQ3Yy4yNjctLjI0OS41NzMtLjM3My45Mi0uMzczLjM0NyAwIC42NjIuMTUxLjkyOS40LjI2Ny4yNDkuMzkxLjU1MS4zOTEuOTA3IDAgLjM1NS0uMTI0LjY1Ny0uMzczLjkwNnpNNS4zMzMgNy4yNGMtLjc0Ni4wMTgtMS4zNzMuMjc2LTEuODguNzczLS41MDYuNDk4LS43NjkgMS4xMy0uNzg2IDEuODk0djcuNTJjLjAxNy43NjQuMjggMS4zOTUuNzg2IDEuODkzLjUwNy40OTggMS4xMzQuNzU2IDEuODguNzczaDEzLjMzNGMuNzQ2LS4wMTcgMS4zNzMtLjI3NSAxLjg4LS43NzMuNTA2LS40OTguNzY5LTEuMTI5Ljc4Ni0xLjg5M3YtNy41MmMtLjAxNy0uNzY1LS4yOC0xLjM5Ni0uNzg2LTEuODk0LS41MDctLjQ5Ny0xLjEzNC0uNzU1LTEuODgtLjc3M3pNOCAxMS4xMDdjLjM3MyAwIC42ODQuMTI0LjkzMy4zNzMuMjUuMjQ5LjM4My41NjkuNC45NnYxLjE3M2MtLjAxNy4zOTEtLjE1LjcxMS0uNC45Ni0uMjQ5LjI1LS41Ni4zNzQtLjkzMy4zNzRzLS42ODQtLjEyNS0uOTMzLS4zNzRjLS4yNS0uMjQ5LS4zODMtLjU2OS0uNC0uOTZWMTIuNDRjMC0uMzczLjEyOS0uNjg5LjM4Ni0uOTQ3LjI1OC0uMjU3LjU3NC0uMzg2Ljk0Ny0uMzg2em04IDBjLjM3MyAwIC42ODQuMTI0LjkzMy4zNzMuMjUuMjQ5LjM4My41NjkuNC45NnYxLjE3M2MtLjAxNy4zOTEtLjE1LjcxMS0uNC45Ni0uMjQ5LjI1LS41Ni4zNzQtLjkzMy4zNzRzLS42ODQtLjEyNS0uOTMzLS4zNzRjLS4yNS0uMjQ5LS4zODMtLjU2OS0uNC0uOTZWMTIuNDRjLjAxNy0uMzkxLjE1LS43MTEuNC0uOTYuMjQ5LS4yNDkuNTYtLjM3My45MzMtLjM3M1oiLz4KPC9zdmc+"
+
+def check_envs():
+    logger.info("Checking required environment variables...")
+    missing = []
+    for env in REQUIRED_ENVS:
+        if os.environ.get(env) is None:
+            missing.append(env)
+    if len(missing) > 0:
+        raise EnvironmentError(f"Missing required environment variables: {', '.join(missing)}")
+    logger.info("All required environment variables are set.")
+    return True
 
 def getneededinfo(info: str,need: str):
     return info[need]
@@ -67,9 +78,10 @@ def make_following_badge(number:int = 999):
     write_file("following.svg",result)
 
 def make_level_badge(number:int = 0):
+    level_colors = ["inactive","inactive","lightgreen","lightblue","lightorange","orange","red"] # Notes: level 0 and 1 are inactive(grey)
     result = badge(
         left_color=default_left_color,
-        right_color=default_right_color,
+        right_color=level_colors[number],
         logo=default_logo,
         left_text="BiliBili 等级",
         right_text=str(number),
@@ -78,23 +90,20 @@ def make_level_badge(number:int = 0):
     write_file("level.svg",result)
 
 def make_live_status_badge(stat:int=0,url:str="https://live.bilibili.com"):
-    if stat == 0:
-        live_status = "未开播"
-        live_status_color = "gray"
-    else:
-        live_status = "直播中"
-        live_status_color = "green"
+    live_status = ["Not Live","Live"]
+    live_status_color = ["inactive","red"]
     result = badge(
         left_color=default_left_color,
-        right_color=live_status_color,
+        right_color=live_status_color[stat],
         logo=default_logo,
         left_text="BiliBili 直播间",
-        right_text=live_status,
+        right_text=live_status[stat],
         whole_link=url
         )
     write_file("liveroom.svg",result)
 
 def make_view_badge(views:str,view_type:str = "video"):
+    logger.info(f"Making view badge for {view_type}")
     if view_type == "video":
         left_text="BiliBili 播放数"
         right_text=getneededinfo(views,"archive")["view"]
@@ -105,6 +114,7 @@ def make_view_badge(views:str,view_type:str = "video"):
         left_text="BiliBili 阅读数"
         right_text=getneededinfo(views,"article")["view"]
     else:
+        logger.warning(f"Unknown view type {view_type}, fall back to video")
         make_view_badge(views)
     result = badge(
         left_color=default_left_color,
@@ -117,6 +127,7 @@ def make_view_badge(views:str,view_type:str = "video"):
 
 @logger.catch
 def main():
+    check_envs()
     uid = os.environ[ENV_VAR_BILI_UID]
     sessdata = os.environ[ENV_VAR_BILI_SESSDATA]
     jct = os.environ[ENV_VAR_BILI_JCT]
@@ -147,6 +158,12 @@ if __name__== "__main__":
     import time
     logger.info("Starting jobs...")
     s = time.perf_counter()
+    if os.environ.get("BILI_VIEW_TYPE") is None:
+        logger.info("BILI_VIEW_TYPE not set, using video as default")
+        view_type="video"
+    else:
+        logger.info(f"BILI_VIEW_TYPE set to {os.environ.get('BILI_VIEW_TYPE')}")
+        view_type=os.environ.get("BILI_VIEW_TYPE")
     main()
     elapsed = time.perf_counter() - s
     logger.info(f"{__file__} executed in {elapsed:0.2f} seconds.")
